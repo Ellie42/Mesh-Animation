@@ -109,6 +109,19 @@ namespace CodeWriter.MeshAnimation
             return null;
         }
 
+        public AnimationClip GetAnimationClip(string name)
+        {
+            foreach (var clip in animationClips)
+            {
+                if (clip.name == name)
+                {
+                    return clip;
+                }
+            }
+
+            return null;
+        }
+
 #if UNITY_EDITOR
         private void Reset()
         {
