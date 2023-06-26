@@ -43,6 +43,9 @@ namespace CodeWriter.MeshAnimation
         [TableList]
         public List<ExtraMaterial> ExtraMaterials = new List<ExtraMaterial>();
 
+        public Texture2D BakedTexture => bakedTexture;
+        public Material BakedMaterial => bakedMaterial;
+
         [ReadOnly]
         [SerializeField]
         internal Texture2D bakedTexture = default;
@@ -137,14 +140,14 @@ namespace CodeWriter.MeshAnimation
         [DisableIf(nameof(IsInvalid))]
         [PropertySpace(10)]
         [Button(ButtonSizes.Large, Name = "Bake")]
-        private void Bake()
+        public void Bake()
         {
             MeshAnimationBaker.Bake(this);
         }
 
         [PropertySpace(5)]
         [Button(ButtonSizes.Small, Name = "Clear baked data")]
-        private void Clear()
+        public void Clear()
         {
             MeshAnimationBaker.Clear(this);
         }
