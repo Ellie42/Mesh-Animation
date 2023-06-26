@@ -9,7 +9,7 @@ namespace CodeWriter.MeshAnimation
 
         public static void Play(this MeshAnimationAsset asset,
             MaterialPropertyBlock block,
-            string animationName,
+            AnimationClip animationClip,
             float speed = 1f,
             float? normalizedTime = 0f)
         {
@@ -17,7 +17,7 @@ namespace CodeWriter.MeshAnimation
 
             foreach (var animationData in asset.animationData)
             {
-                if (animationData.name != animationName)
+                if (animationData.name != animationClip.name)
                 {
                     continue;
                 }

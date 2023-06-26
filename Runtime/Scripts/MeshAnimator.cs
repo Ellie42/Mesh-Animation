@@ -29,10 +29,16 @@ namespace CodeWriter.MeshAnimation
         }
 
         [PublicAPI]
-        public void Play(string animationName, float speed = 1f, float? normalizedTime = 0f)
+        public void Play(AnimationClip animationClip, float speed = 1f, float? normalizedTime = 0f)
         {
+            if (!MeshAnimation.Contains(animationClip))
+            {
+                Debug.LogError($"Animation clip {animationClip.name} not found in {MeshAnimation.name} asset");
+                return;
+            }
+
             MeshRenderer.GetPropertyBlock(_propertyBlock);
-            MeshAnimation.Play(_propertyBlock, animationName, speed, normalizedTime);
+            MeshAnimation.Play(_propertyBlock, animationClip, speed, normalizedTime);
             MeshRenderer.SetPropertyBlock(_propertyBlock);
         }
     }

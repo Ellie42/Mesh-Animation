@@ -152,5 +152,17 @@ namespace CodeWriter.MeshAnimation
             MeshAnimationBaker.Clear(this);
         }
 #endif
+        public bool Contains(AnimationClip animationClip)
+        {
+            foreach (var clip in AnimationClips)
+            {
+                if (clip == animationClip)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
