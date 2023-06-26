@@ -1,3 +1,5 @@
+using UnityEngine.Serialization;
+
 namespace CodeWriter.MeshAnimation
 {
     using System;
@@ -9,33 +11,37 @@ namespace CodeWriter.MeshAnimation
     [CreateAssetMenu(menuName = "Mesh Animation")]
     public class MeshAnimationAsset : ScriptableObject
     {
+        [FormerlySerializedAs("skin")]
         [InfoBox("$" + nameof(GetValidationMessage), TriMessageType.Error, visibleIf: nameof(IsInvalid))]
         [SerializeField]
-        internal GameObject skin = default;
+        public GameObject Skin = default;
 
+        [FormerlySerializedAs("shader")]
         [Required]
         [SerializeField]
-        internal Shader shader = default;
+        public Shader Shader = default;
 
-        [SerializeField]
-        internal Material materialPreset = default;
+        [FormerlySerializedAs("materialPreset")] [SerializeField]
+        public Material MaterialPreset = default;
 
-        [SerializeField]
-        internal bool npotBakedTexture = false;
+        [FormerlySerializedAs("npotBakedTexture")] [SerializeField]
+        public bool NpotBakedTexture = false;
 
-        [SerializeField]
-        internal bool linearColorSpace = false;
+        [FormerlySerializedAs("linearColorSpace")] [SerializeField]
+        public bool LinearColorSpace = false;
 
+        [FormerlySerializedAs("animationClips")]
         [PropertySpace]
         [Required]
         [SerializeField]
         [ListDrawerSettings(AlwaysExpanded = true)]
-        internal AnimationClip[] animationClips = new AnimationClip[0];
+        public AnimationClip[] AnimationClips = new AnimationClip[0];
 
+        [FormerlySerializedAs("extraMaterials")]
         [Required]
         [SerializeField]
         [TableList]
-        internal List<ExtraMaterial> extraMaterials = new List<ExtraMaterial>();
+        public List<ExtraMaterial> ExtraMaterials = new List<ExtraMaterial>();
 
         [ReadOnly]
         [SerializeField]
@@ -56,7 +62,7 @@ namespace CodeWriter.MeshAnimation
         internal List<AnimationData> animationData = new List<AnimationData>();
 
         [Serializable]
-        internal class ExtraMaterial
+        public class ExtraMaterial
         {
             [Required]
             public string name;
@@ -85,23 +91,23 @@ namespace CodeWriter.MeshAnimation
 
         public string GetValidationMessage()
         {
-            if (skin == null) return "Skin is required";
+            if (Skin == null) return "Skin is required";
 
-            if (animationClips.Length == 0) return "No animation clips";
+            if (AnimationClips.Length == 0) return "No animation clips";
 
-            foreach (var clip in animationClips)
+            foreach (var clip in AnimationClips)
             {
                 if (clip == null) return "Animation clip is null";
                 if (clip.legacy) return "Legacy Animation clips not supported";
             }
 
-            if (shader == null) return "shader is null";
-            if (skin == null) return "skin is null";
+            if (Shader == null) return "shader is null";
+            if (Skin == null) return "skin is null";
 
-            var skinnedMeshRenderer = skin.GetComponentInChildren<SkinnedMeshRenderer>();
+            var skinnedMeshRenderer = Skin.GetComponentInChildren<SkinnedMeshRenderer>();
             if (skinnedMeshRenderer == null) return "skin.GetComponentInChildren<SkinnedMeshRenderer>() == null";
 
-            var skinAnimator = skin.GetComponent<Animator>();
+            var skinAnimator = Skin.GetComponent<Animator>();
             if (skinAnimator == null) return "skin.GetComponent<Animator>() == null";
             if (skinAnimator.runtimeAnimatorController == null)
                 return "skin.GetComponent<Animator>().runtimeAnimatorController == null";
@@ -111,7 +117,7 @@ namespace CodeWriter.MeshAnimation
 
         public AnimationClip GetAnimationClip(string name)
         {
-            foreach (var clip in animationClips)
+            foreach (var clip in AnimationClips)
             {
                 if (clip.name == name)
                 {
@@ -125,7 +131,7 @@ namespace CodeWriter.MeshAnimation
 #if UNITY_EDITOR
         private void Reset()
         {
-            linearColorSpace = UnityEditor.PlayerSettings.colorSpace == ColorSpace.Linear;
+            LinearColorSpace = UnityEditor.PlayerSettings.colorSpace == ColorSpace.Linear;
         }
 
         [DisableIf(nameof(IsInvalid))]

@@ -87,19 +87,19 @@ namespace CodeWriter.MeshAnimation
                 
             if (asset.bakedMaterial == null)
             {
-                var material = new Material(asset.shader) {name = materialAssetName};
+                var material = new Material(asset.Shader) {name = materialAssetName};
                 asset.bakedMaterial = material;
                 AssetDatabase.AddObjectToAsset(material, asset);
             }
             else
             {
-                asset.bakedMaterial.shader = asset.shader;
+                asset.bakedMaterial.shader = asset.Shader;
                 asset.bakedMaterial.name = materialAssetName;
             }
 
-            if (asset.materialPreset != null)
+            if (asset.MaterialPreset != null)
             {
-                var preset = new Preset(asset.materialPreset);
+                var preset = new Preset(asset.MaterialPreset);
                 if (preset.CanBeAppliedTo(asset.bakedMaterial))
                 {
                     preset.ApplyTo(asset.bakedMaterial);
@@ -111,7 +111,7 @@ namespace CodeWriter.MeshAnimation
 
         private static void CreateExtraMaterials(MeshAnimationAsset asset)
         {
-            foreach (var extra in asset.extraMaterials)
+            foreach (var extra in asset.ExtraMaterials)
             {
                 var data = asset.extraMaterialData.Find(it => it.name == extra.name);
                 if (data == null)
@@ -125,11 +125,11 @@ namespace CodeWriter.MeshAnimation
 
                 if (data.material == null)
                 {
-                    data.material = new Material(asset.shader) {name = $"{asset.name}_{extra.name} Material"};
+                    data.material = new Material(asset.Shader) {name = $"{asset.name}_{extra.name} Material"};
                     AssetDatabase.AddObjectToAsset(data.material, asset);
                 }
 
-                data.material.shader = asset.shader;
+                data.material.shader = asset.Shader;
 
                 if (extra.preset != null)
                 {
@@ -145,7 +145,7 @@ namespace CodeWriter.MeshAnimation
 
             foreach (var data in asset.extraMaterialData)
             {
-                if (asset.extraMaterials.Any(extra => extra.name == data.name))
+                if (asset.ExtraMaterials.Any(extra => extra.name == data.name))
                 {
                     continue;
                 }
@@ -164,9 +164,9 @@ namespace CodeWriter.MeshAnimation
 
             if (asset.bakedTexture == null)
             {
-                var mesh = asset.skin.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
+                var mesh = asset.Skin.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
                 var vertexCount = mesh.vertexCount;
-                var framesCount = asset.animationClips.Sum(clip => clip.GetFramesCount() + 1);
+                var framesCount = asset.AnimationClips.Sum(clip => clip.GetFramesCount() + 1);
 
                 if (vertexCount > 2048)
                 {
@@ -188,9 +188,9 @@ namespace CodeWriter.MeshAnimation
                     }
                 }
 
-                var texWidth = asset.npotBakedTexture ? vertexCount : Mathf.NextPowerOfTwo(vertexCount);
-                var textHeight = asset.npotBakedTexture ? framesCount : Mathf.NextPowerOfTwo(framesCount);
-                var linear = asset.linearColorSpace;
+                var texWidth = asset.NpotBakedTexture ? vertexCount : Mathf.NextPowerOfTwo(vertexCount);
+                var textHeight = asset.NpotBakedTexture ? framesCount : Mathf.NextPowerOfTwo(framesCount);
+                var linear = asset.LinearColorSpace;
 
                 var texture = new Texture2D(texWidth, textHeight, TextureFormat.RGB24, false, linear)
                 {
@@ -206,7 +206,7 @@ namespace CodeWriter.MeshAnimation
 
         private static void BakeAnimations(MeshAnimationAsset asset)
         {
-            var bakeObject = Object.Instantiate(asset.skin.gameObject);
+            var bakeObject = Object.Instantiate(asset.Skin.gameObject);
             bakeObject.hideFlags = HideFlags.HideAndDontSave;
             var bakeMesh = new Mesh {hideFlags = HideFlags.HideAndDontSave};
             var skin = bakeObject.GetComponentInChildren<SkinnedMeshRenderer>();
@@ -233,7 +233,7 @@ namespace CodeWriter.MeshAnimation
 
             try
             {
-                foreach (var clip in asset.animationClips)
+                foreach (var clip in asset.AnimationClips)
                 {
                     for (int frame = 0, framesCount = clip.GetFramesCount(); frame < framesCount; frame++)
                     {
@@ -252,7 +252,7 @@ namespace CodeWriter.MeshAnimation
                 }
 
                 int globalFrame = 0;
-                foreach (var clip in asset.animationClips)
+                foreach (var clip in asset.AnimationClips)
                 {
                     var framesCount = clip.GetFramesCount();
                     var looping = clip.isLooping;
