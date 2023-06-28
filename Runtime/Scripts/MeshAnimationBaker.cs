@@ -25,14 +25,15 @@ namespace CodeWriter.MeshAnimation
 
             DestroyObject(ref asset.bakedMaterial);
             DestroyObject(ref asset.bakedTexture);
-            
-            foreach (var data in asset.extraMaterialData) {
+
+            foreach (var data in asset.extraMaterialData)
+            {
                 DestroyObject(ref data.material);
             }
 
             asset.extraMaterialData = new List<MeshAnimationAsset.ExtraMaterialData>();
             asset.animationData = new List<MeshAnimationAsset.AnimationData>();
-            
+
             SaveAsset(asset);
         }
 
@@ -84,7 +85,7 @@ namespace CodeWriter.MeshAnimation
         private static void CreateMaterial(MeshAnimationAsset asset)
         {
             var materialAssetName = asset.name + " Material";
-                
+
             if (asset.bakedMaterial == null)
             {
                 var material = new Material(asset.Shader) {name = materialAssetName};
@@ -192,7 +193,7 @@ namespace CodeWriter.MeshAnimation
                 var textHeight = asset.NpotBakedTexture ? framesCount : Mathf.NextPowerOfTwo(framesCount);
                 var linear = asset.LinearColorSpace;
 
-                var texture = new Texture2D(texWidth, textHeight, TextureFormat.RGB24, false, linear)
+                var texture = new Texture2D(texWidth, textHeight, TextureFormat.RGBAFloat, false, linear)
                 {
                     name = asset.name + " Texture",
                     hideFlags = HideFlags.NotEditable,
@@ -306,13 +307,14 @@ namespace CodeWriter.MeshAnimation
             Object.DestroyImmediate(bakeObject);
             Object.DestroyImmediate(bakeMesh);
 
-            var materials = new HashSet<Material> { asset.bakedMaterial };
+            var materials = new HashSet<Material> {asset.bakedMaterial};
             foreach (var data in asset.extraMaterialData)
             {
                 materials.Add(data.material);
             }
 
-            foreach (var material in materials) {
+            foreach (var material in materials)
+            {
                 material.SetTexture(AnimTextureProp, asset.bakedTexture);
                 material.SetVector(AnimationMulProp, boundMax - boundMin);
                 material.SetVector(AnimationAddProp, boundMin);
