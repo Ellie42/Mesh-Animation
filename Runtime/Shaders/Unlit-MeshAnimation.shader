@@ -62,10 +62,15 @@
                 
                 float4 t = UNITY_ACCESS_INSTANCED_PROP(Props, _AnimTime);
                 float looping = UNITY_ACCESS_INSTANCED_PROP(Props, _AnimLoop);
+
+                float start = t.x;
+                float length = t.y;
+                float speed = t.z;
+                float startTime = t.w;
                 
-                float progress = (_Time.y - t.w) * t.z;
+                float progress = (_Time.y - startTime) * speed;
                 float progress01 = lerp(saturate(progress), frac(progress), looping);
-                float2 coords = float2(0.5 + v.vertcoord.x, 0.5 + t.x + progress01 * t.y) * _AnimTex_TexelSize.xy;
+                float2 coords = float2(0.5 + v.vertcoord.x, 0.5 + start + progress01 * length) * _AnimTex_TexelSize.xy;
                 float4 position = tex2Dlod(_AnimTex, float4(coords, 0, 0)) * _AnimMul + _AnimAdd;
                 
                 v.vertex = float4(position.xyz, 1.0);
