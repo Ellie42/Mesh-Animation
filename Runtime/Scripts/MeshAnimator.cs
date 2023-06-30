@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Serialization;
 
 namespace CodeWriter.MeshAnimation
@@ -39,6 +40,12 @@ namespace CodeWriter.MeshAnimation
 
             MeshRenderer.GetPropertyBlock(_propertyBlock);
             MeshAnimation.Play(_propertyBlock, animationClip, speed, normalizedTime);
+            MeshRenderer.SetPropertyBlock(_propertyBlock);
+        }
+
+        public void SetProgress(float progress01)
+        {
+            _propertyBlock.SetVector("_AnimState", new Vector4(progress01, 0, 0, 0));
             MeshRenderer.SetPropertyBlock(_propertyBlock);
         }
     }
