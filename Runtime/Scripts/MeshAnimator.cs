@@ -20,12 +20,8 @@ namespace CodeWriter.MeshAnimation
         [SerializeField]
         public MeshAnimationAsset MeshAnimation = default;
 
-        private MaterialPropertyBlock _propertyBlock;
-
         private void Awake()
         {
-            _propertyBlock = new MaterialPropertyBlock();
-
             MeshCache.GenerateSecondaryUv(this.MeshRenderer.GetComponent<MeshFilter>().sharedMesh);
         }
 
@@ -38,15 +34,12 @@ namespace CodeWriter.MeshAnimation
                 return;
             }
 
-            MeshRenderer.GetPropertyBlock(_propertyBlock);
-            MeshAnimation.Play(_propertyBlock, animationClip, speed, normalizedTime);
-            MeshRenderer.SetPropertyBlock(_propertyBlock);
+            MeshAnimation.Play(MeshRenderer, animationClip, speed, normalizedTime);
         }
 
         public void SetProgress(float progress01)
         {
-            _propertyBlock.SetVector("_AnimState", new Vector4(progress01, 0, 0, 0));
-            MeshRenderer.SetPropertyBlock(_propertyBlock);
+            MeshRenderer.material.SetVector("_AnimState", new Vector4(progress01, 0, 0, 0));
         }
     }
 }
