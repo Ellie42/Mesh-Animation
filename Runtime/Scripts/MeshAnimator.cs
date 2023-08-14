@@ -20,9 +20,15 @@ namespace CodeWriter.MeshAnimation
         [SerializeField]
         public MeshAnimationAsset MeshAnimation = default;
 
+        private static readonly int AnimState = Shader.PropertyToID("_AnimState");
+
+        private MaterialPropertyBlock _materialPropertyBlock;
+
         private void Awake()
         {
             MeshCache.GenerateSecondaryUv(this.MeshRenderer.GetComponent<MeshFilter>().sharedMesh);
+
+            _materialPropertyBlock = new MaterialPropertyBlock();
         }
 
         [PublicAPI]
@@ -39,7 +45,8 @@ namespace CodeWriter.MeshAnimation
 
         public void SetProgress(float progress01)
         {
-            MeshRenderer.material.SetVector("_AnimState", new Vector4(progress01, 0, 0, 0));
+            _materialPropertyBlock.SetVector(AnimState, new Vector4(progress01, 0, 0, 0));
+            MeshRenderer.SetPropertyBlock(_materialPropertyBlock);
         }
     }
 }
